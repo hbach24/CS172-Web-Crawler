@@ -71,7 +71,7 @@ public class Crawler {
 				visited.add(url); //add link to visited ArrayList
 				
 				//TODO: call file writer function here after writing it
-				DownloadHTML(url, fileNo);
+				HTMLtoFile(url, fileNo);
 				fileNo+=1;
 
 				return doc;
@@ -86,11 +86,11 @@ public class Crawler {
 		}
 }
 	
-	public static void DownloadHTML(String u, int count) {
+	public static void HTMLtoFile(String u, int count) {
 		try {
 			String html = Jsoup.connect(u).get().html();
 			String c = Integer.toString(count);
-			String fname = "C:\\Users\\hanna\\eclipse-workspace\\CS172 Project\\files\\File" + c + ".txt"; //storing html files into my \files folder
+			String fname = "C:\\Users\\hanna\\git\\Web-Crawler-Project\\CS172 Project\\files\\File" + c + ".txt"; //storing html files into my \files folder
 			
 			//String fname = "File" + c + ".txt"; //without a path (I just added my own path to an empty folder so I can keep things more organized)
 			
