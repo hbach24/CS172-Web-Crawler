@@ -17,9 +17,11 @@ public class Crawler {
 		public static Queue<String> frontier = new LinkedList<>();
 		public static HashSet<String> visited = new HashSet<>();
 		
-		public static int pageCounter =  0;
-		public static int MAX_PAGE_COUNT = 10; //should download a total of 40 pages (that is, if we don't encounter any errors during crawling)
-		public static int fileNo = 0;
+		public static int pageCounter = 0;
+		public static int levelCounter = 0;
+		public static int MAX_PAGE_COUNT = 20; //should download a total of 40 pages (that is, if we don't encounter any errors during crawling)
+		public static int MAX_LEVEL_COUNT = 5;
+		// public static int fileNo = 0;
 		
 	public static void main(String[] args) {
 		// String url = "https://www.ucr.edu/";
@@ -49,28 +51,25 @@ public class Crawler {
 	private static void crawl(String url) {
 		//url: the url we want to visit
 		//visited: keep track of the sites we already visited
-		
+		levelCounter = 0;
+
 		frontier.add(url);
 		visited.add(url);
 
-		while(!frontier.isEmpty() && pageCounter <= MAX_PAGE_COUNT) {
+		while(!frontier.isEmpty() && pageCounter <= MAX_PAGE_COUNT && levelCounter <= MAX_LEVEL_COUNT) {
 			String crawlUrl = frontier.remove();
 			Document doc = request(crawlUrl); 
 			
 			System.out.println("CRAWL URL: " + crawlUrl);
-			pageCounter+=1; 
+			pageCounter += 1;
+			levelCounter += 1;
 			
 			if(doc != null) { //if doc is ok to visit, then...
-				
-				//TODO: Might need to add some sort of Depth for crawling each page***
-				
-				
 				//System.out.println(doc.select("a[href]")); //doc.select("a[href]") => combines ALL hyperlinks associated with the current page we are visiting
 				
 				for(Element link : doc.select("a[href]")) { //..select every single hyperlink in the seed document and visit them if unvisited
 					
 					String next_link = link.absUrl("href");
-					
 					
 					//TODO: call normalize(url) function to normalize the link first to see if it's actually a duplicate of a url that has already been visited
 					next_link = normalize(next_link);
@@ -99,8 +98,8 @@ public class Crawler {
 				visited.add(url); //add link to visited HashSet
 				
 				//TODO: call file writer function here after writing it
-				DownloadHTML(url, fileNo);
-				fileNo+=1;
+				DownloadHTML(url, pageCounter, levelCounter);
+				// fileNo+=1;
 
 				return doc;
 			}
@@ -112,13 +111,14 @@ public class Crawler {
 		}
 }
 	
-	public static void DownloadHTML(String u, int count) {
+	public static void DownloadHTML(String u, int pageCount, int levelCount) {
 		try {
 			String html = Jsoup.connect(u).get().html();
-			String c = Integer.toString(count);
+			String pc = Integer.toString(pageCount);
+			String lc = Integer.toString(levelCount);
 			
 			//String fname = "C:\\Users\\hanna\\git\\Web-Crawler-Project\\CS172 Project\\files\\File" + c + ".txt"; 
-			String fname = "CS172 Project\\src\\html_files\\File" + c + ".txt"; 
+			String fname = "CS172 Project\\src\\html_files\\File_no" + pc + "_level" + lc + ".txt"; 
 			
 			File file = new File(fname);
 			
