@@ -2,6 +2,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,15 +18,32 @@ public class Crawler {
 		public static HashSet<String> visited = new HashSet<>();
 		
 		public static int pageCounter =  0;
-		public static int MAX_PAGE_COUNT = 40; //should download a total of 40 pages (that is, if we don't encounter any errors during crawling)
+		public static int MAX_PAGE_COUNT = 10; //should download a total of 40 pages (that is, if we don't encounter any errors during crawling)
 		public static int fileNo = 0;
 		
 	public static void main(String[] args) {
-		// TODO: Our crawler should read in a .txt file containing a lot of URLs as seed input
-		
-		String url = "https://www.ucr.edu/";
-		crawl(url); 
+		// String url = "https://www.ucr.edu/";
+		// crawl(url); 
 
+		try {
+			String fileName = "CS172 Project\\src\\seed_urls.txt";
+			File file = new File(fileName);
+
+			byte[] fileBytes = Files.readAllBytes(file.toPath());
+			char singleChar;
+			String url = "";
+			for (byte b : fileBytes) {
+				singleChar = (char) b; // convert from byte to string
+				url += singleChar;
+				if (singleChar == '\n') { // finished getting one url
+					crawl(url);
+					url = ""; // empty url string to get new url
+				}
+			}
+		}
+		catch (Exception e) {
+			System.err.println("File " + e.getMessage() + " is not found."); // handle exception
+		}
 	}
 
 	private static void crawl(String url) {
