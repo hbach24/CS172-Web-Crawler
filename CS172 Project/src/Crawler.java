@@ -118,7 +118,7 @@ public class Crawler {
 			String c = Integer.toString(count);
 			
 			//String fname = "C:\\Users\\hanna\\git\\Web-Crawler-Project\\CS172 Project\\files\\File" + c + ".txt"; 
-			String fname = "File" + c + ".txt"; //without a path (I just added my own path to an empty folder so I can keep things more organized)		
+			String fname = "CS172 Project\\src\\html_files\\File" + c + ".txt"; 
 			
 			File file = new File(fname);
 			
