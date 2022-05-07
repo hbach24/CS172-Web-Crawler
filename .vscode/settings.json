@@ -1,0 +1,10 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        "exclude": [
+            "c:\\CS172 Project\\jsoup-1.14.3.jar"
+        ]
+    }
+}
