@@ -130,10 +130,23 @@ public class Crawler {
 		if(!link.contains(".edu")) { //if link is not .edu, do not visit it.
 			valid = false;
 		}
-		if(link.contains(".pdf") || link.contains(".png") || link.startsWith("mailto:")) { //unsure about .png condition
+		if(link.contains(".pdf") || link.contains(".png") || link.contains(".jpeg") || link.startsWith("mailto:")) { //unsure about .png condition
 			valid = false;
 		}
-		
+		//Added checks for websites that begin with anything other than http
+		if(link.contains("https") || link.contains("ftp")) { 
+			valid = false;
+		}
+		//Checks for invalid characters in URLS
+		if(link.contains(" ") || link.contains("{") || link.contains("}") || link.contains("|") || link.contains("\\") || link.contains("^") || link.contains("~") || 
+		link.contains("[") || link.contains("]") || link.contains("&") || link.contains("`")) { 
+			valid = false;
+		}
+		if(link.contains(".html")) { 
+			valid = false;
+		}
+
+
 		return valid;
 	}
 	
@@ -143,16 +156,30 @@ public class Crawler {
 	public static String normalize(String link) { //this function should return a normalized string of the url
 		int lastPos = link.length();
 		String newLink = link;
-		
+
 		//indexOf returns -1 if "?" does not exist in string; otherwise, it returns the index of the 1st occurrence of the char "?"
+		
 		if(link.indexOf("?") > 0) { 
 			lastPos = link.indexOf("?");
+			
 		}
 		if(link.indexOf("#") > 0) {
 			lastPos = link.indexOf("#");
 		}
-	
+		if(link.indexOf("&") > 0) {
+			lastPos = link.indexOf("&");
+		}
+		
+		if(link.indexOf(":") > 5) {
+			lastPos = link.indexOf(":");
+		}
+
 		newLink = link.substring(0, lastPos);
+		
+		if(newLink.endsWith("/")){
+			newLink = link.substring(0, lastPos - 1);
+		}
+
 		return newLink;
 	}
 	
