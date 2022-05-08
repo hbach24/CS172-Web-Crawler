@@ -170,15 +170,16 @@ public class Crawler {
 			lastPos = link.indexOf("&");
 		}
 		
-		if(link.indexOf(":") > 5) {
-			lastPos = link.indexOf(":");
-		}
 
 		newLink = link.substring(0, lastPos);
 		
 		if(newLink.endsWith("/")){
 			newLink = link.substring(0, lastPos - 1);
 		}
+
+		if(newLink.endsWith(":")){
+			newLink = link.substring(0, lastPos - 1);
+		}	
 
 		return newLink;
 	}
