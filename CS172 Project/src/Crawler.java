@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -56,6 +58,7 @@ public class Crawler {
 					
 					//TODO: call normalize(url) function to normalize the link first to see if it's actually a duplicate of a url that has already been visited
 					next_link = normalize(next_link);
+					next_link = encode(next_link); //Not sure if this is called correctly
 					boolean valid = isValidUrl(next_link);
 					
 					if(visited.contains(next_link) == false && valid) { //checking if link was already visited (to avoid duplicates)
@@ -137,11 +140,7 @@ public class Crawler {
 		if(link.contains("https") || link.contains("ftp")) { 
 			valid = false;
 		}
-		//Checks for invalid characters in URLS
-		if(link.contains(" ") || link.contains("{") || link.contains("}") || link.contains("|") || link.contains("\\") || link.contains("^") || link.contains("~") || 
-		link.contains("[") || link.contains("]") || link.contains("&") || link.contains("`")) { 
-			valid = false;
-		}
+
 		if(link.contains(".html")) { 
 			valid = false;
 		}
@@ -166,10 +165,6 @@ public class Crawler {
 		if(link.indexOf("#") > 0) {
 			lastPos = link.indexOf("#");
 		}
-		if(link.indexOf("&") > 0) {
-			lastPos = link.indexOf("&");
-		}
-		
 
 		newLink = link.substring(0, lastPos);
 		
@@ -178,10 +173,25 @@ public class Crawler {
 		}
 
 		if(newLink.endsWith(":")){
-			newLink = link.substring(0, lastPos - 1);
+			newLink = link.substring(0, link.length());
 		}	
 
+
+
 		return newLink;
+	}
+
+	public static String encode(String link){
+		String symbol = link.substring(0);
+		String encodedSymbol = link;
+
+		if(link.contains(" ") || link.contains("{") || link.contains("}") || link.contains("|") || link.contains("\\") || link.contains("^") || link.contains("~") || 
+		link.contains("[") || link.contains("]") || link.contains("&") || link.contains("`")) { 
+			encodedSymbol = URLEncoder.encode(symbol, StandardCharsets.UTF_8);
+		}
+
+
+		return encodedSymbol;
 	}
 	
 }
